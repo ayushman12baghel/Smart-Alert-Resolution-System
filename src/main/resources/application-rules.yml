@@ -1,0 +1,28 @@
+# Rule Engine Configuration
+#
+# Each key under rules.strategies must exactly match the sourceType field on
+# Alert objects (case-sensitive). RuleProperties binds this via
+# @ConfigurationProperties(prefix = "rules").
+#
+#   escalate-if-count : number of events (inclusive of current) within the window to trigger escalation
+#   window-mins       : sliding time window length in minutes
+
+rules:
+  strategies:
+    # 3 speeding events within 60 minutes → CRITICAL escalation
+    SPEED_MONITOR:
+      escalate-if-count: 3
+      window-mins: 60
+
+    # Document renewal event auto-closes all open COMPLIANCE alerts for the driver
+    COMPLIANCE:
+      auto-close-if: "document_valid"
+
+    # Example: uncomment and create a HarshBrakingRuleStrategy @Component to activate
+    # HARSH_BRAKING:
+    #   escalate-if-count: 5
+    #   window-mins: 30
+
+    # FATIGUE_MONITOR:
+    #   escalate-if-count: 2
+    #   window-mins: 120

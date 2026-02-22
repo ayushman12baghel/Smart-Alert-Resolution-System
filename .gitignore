@@ -1,0 +1,27 @@
+# ── Java / Maven ──────────────────────────────────────────────────────────────
+target/
+*.class
+*.jar
+*.war
+*.log
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+
+# ── Secrets — NEVER commit real credentials ───────────────────────────────────
+# application.yml contains DB password, Redis URL, and JWT secret.
+# Reviewers should copy application.yml.example and fill in their own values.
+src/main/resources/application.yml
+
+# ── Node / Frontend ───────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

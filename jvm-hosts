@@ -1,0 +1,10 @@
+##
+# Custom JVM hosts override — used by spring-boot:run via -Djdk.net.hosts.file
+# This file is needed because the system's local DNS server cannot resolve
+# Neon.tech pooler endpoints. Resolution verified via 8.8.8.8.
+##
+127.0.0.1       localhost
+::1             localhost
+
+# Neon.tech PostgreSQL pooler — resolved via 8.8.8.8 on 2026-02-21
+98.91.36.187    ep-nameless-term-aikk3v6k-pooler.c-4.us-east-1.aws.neon.tech

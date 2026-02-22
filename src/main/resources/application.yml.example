@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: alert-system
+
+  # Include the rule-engine thresholds from application-rules.yml
+  profiles:
+    include: rules
+
+  datasource:
+    # connectTimeout=10  → wait up to 10 s for Neon compute to wake from suspension
+    # socketTimeout=60   → abort a stalled query after 60 s
+    # tcpKeepAlive=true  → prevent idle connections from being silently dropped by Neon's pooler
+    url: jdbc:postgresql://ep-nameless-term-aikk3v6k-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&connectTimeout=10&socketTimeout=60&tcpKeepAlive=true
+    username: neondb_owner
+    password: YOUR_NEON_PASSWORD_HERE
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      # -1 → don't fail fast on startup; let the pool retry until a connection
+      #       is available (Neon compute typically wakes within 5–10 s).
+      initialization-fail-timeout: -1
+      # Keep the pool small — Neon free tier allows max 10 concurrent connections.
+      maximum-pool-size: 5
+      minimum-idle: 1
+      # Aggressively evict idle connections so Neon can suspend the compute.
+      idle-timeout: 300000 # 5 min
+      max-lifetime: 600000 # 10 min
+      # How long to wait when borrowing a connection from the pool.
+      connection-timeout: 30000 # 30 s
+      # Lightweight liveness check — runs before handing a connection to the app.
+      connection-test-query: SELECT 1
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  data:
+    redis:
+      url: rediss://default:YOUR_REDIS_PASSWORD_HERE@dashing-boa-28670.upstash.io:6379
+
+  cache:
+    type: none
+    # Switch to 'redis' and uncomment below to re-enable the leaderboard cache:
+    # type: redis
+    # redis:
+    #   time-to-live: 300000
+    # cache-names:
+    #   - topDrivers
+
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 1MB
+
+jwt:
+  # HS256 secret — minimum 256-bit (32-byte) Base64 value. Generate with:
+  # openssl rand -base64 32
+  secret: YOUR_SUPER_SECRET_JWT_KEY_HERE
+  expiration-ms: 86400000 # 24 hours
+
+alert:
+  auto-close:
+    cron: "0 */5 * * * *"
+
+server:
+  tomcat:
+    # 2 MB cap on request body reads — prevents large JSON blobs from
+    # consuming memory before Spring even starts deserialising them.
+    max-swallow-size: 2097152
+    max-http-form-post-size: 2097152
