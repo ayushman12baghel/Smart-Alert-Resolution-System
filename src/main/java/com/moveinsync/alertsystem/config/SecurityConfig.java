@@ -88,7 +88,8 @@ public class SecurityConfig {
     }
 
     /**
-     * Explicit origin allowlist — avoids the security footgun of {@code allowedOriginPatterns("*")}
+     * Explicit origin allowlist — avoids the security footgun of
+     * {@code allowedOriginPatterns("*")}
      * while still supporting credentialed requests ({@code Authorization} header).
      * Add your Vercel deployment URL to the list before going to production.
      */
@@ -98,10 +99,9 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://localhost:5174",
-                "https://YOUR_PROJECT_NAME.vercel.app"
-        ));
+                "https://smart-alert-system.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
